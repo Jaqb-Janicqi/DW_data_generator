@@ -1,0 +1,22 @@
+import numpy as np
+import random
+
+
+Type=["delay","breakdown","accident"]
+
+for i in range(1000):
+    Type = random.choice(Type)
+    DelayAmount = np.random.choice([0,1],p=[0.9, 0.1])
+
+
+
+
+
+
+
+
+
+# types = ["delay", "breakdown"]
+# x = np.random.randint(0, 2)
+# types[x]
+# delay = np.random.choice([0, 1], p=[0.9, 0.1])
