@@ -56,6 +56,7 @@ class PassangerRide:
 
 
 class PassangerGenerator:
+    # dictionary of section travel times
     sections = [1, 3, 2, 1, 3, 1, 2, 2, 1, 3, 1,
                 2, 3, 1, 3, 1]  # station0->1, station1->2
 
