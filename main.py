@@ -48,6 +48,9 @@ class PassangerRide:
         return f"{self.entry_section_id},{self.exit_section_id},{self.id},{self.entry_time},{self.exit_time}"
 
 class PassangerGenerator:
+    stations = [1,3,2,1,3,1,2,2,1,3,1,2,3,1,3,1] # station0->1, station1->2
+    stations
+
     def __init__(self, year):
         self.id = 0
         self.num_stations = 16
@@ -58,33 +61,57 @@ class PassangerGenerator:
         self.weekend = weekend_distribution()
         self.working_day = working_day_distribution()
 
-    def generate_passanger_rides(self, num_passangers, weekday):
-        for i in range(num_passangers):
-            for minute in range(1440):
-                if weekday == 5 or weekday == 6:
-                    self.x = weekend_distribution[minute]
-                else:
-                    self.x = working_day_distribution[minute]
-                if self.x > 0 and self.x < 24:
-                    entry_section_id = np.random.randint(1, self.num_stations + 1)
-                    exit_section_id = np.random.randint(1, self.num_stations + 1)
-                    while exit_section_id == entry_section_id:
-                        exit_section_id = np.random.randint(1, self.num_stations)
-                    passenger_ride = PassangerRide(entry_section_id, exit_section_id, self.id, None, None)
-                    self.passanger_rides.append(passenger_ride)
-                    self.id += 1
+    def generate_passanger_rides(self, date):
+        dist = None
+        if date.weekday() == 5 or date.weekday() == 6:
+            dist = weekend_distribution()
+        elif date.weekday() == 4:
+            dist = friday_distribution()
+        else:
+            dist = working_day_distribution()
 
-# passenger_gen = PassangerGenerator(2018)
+        for minute_floor in range(1440):
+            minute_ceil = minute_floor + (1/60) # distribution is in hours, we are interested in 1 minute intervals
+            condition = (dist >= minute_floor) & (dist < minute_ceil)
+            # num_passangers = np.count_nonzero(condition)
+            num_passangers = np.extract(condition, dist).size
+
+            for i in range(num_passangers):
+                exit_section_id = entry_section_id = np.random.randint(1, self.num_stations + 1)
+                while exit_section_id == entry_section_id: exit_section_id = np.random.randint(1, self.num_stations)
+
+                entry_time = date + calendar.datetime.timedelta(minutes=minute_floor)
+                # exit_time = 
+                passenger_ride = PassangerRide(entry_section_id, exit_section_id, self.id, None, None)
+                self.passanger_rides.append(passenger_ride)
+                self.id += 1
+
+                    
+
+
+####################################PROTOTYPING#################################################
+passenger_gen = PassangerGenerator(2018)
 # print (passenger_gen.calendar_tuples[0][0][0][0])
 # print (passenger_gen.calendar_tuples[0][0][0][0].weekday())
 # print (passenger_gen.calendar_tuples[0][0][0][1].weekday())
 # print (passenger_gen.calendar_tuples[0][0][0][6])
 
-# print (passenger_gen.calendar_tuples[0][0][0][0].year)
+print (passenger_gen.calendar_tuples[0][0][0][0].year)
+x = passenger_gen.calendar_tuples[0][0][0][0]
+# print type of x
+print (type(x))
+# datetime = x + calendar.datetime.timedelta(year=x.year, month=x.month, day=x.day, hour=0, minute=0)
+print (x)
 # print (passenger_gen.calendar_tuples[0][0][0])
-dist = weekend_distribution()
 
-hist, bins = np.histogram(dist, bins=1439)
-print(hist.size)
-print(bins[0].shape)
+
+# dist = working_day_distribution()
+# # plot dist
+# plt.hist(dist, bins=1440, alpha=0.5, label='gamma')
+# plt.show()
+# condition = (dist >= 8) & (dist < 8 + 1/60)
+# ticket_count = np.count_nonzero(condition)
+# print(ticket_count)
+# print(ticket_count)
+
 
