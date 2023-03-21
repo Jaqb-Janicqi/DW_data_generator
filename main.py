@@ -6,7 +6,6 @@ import passanger_ride_generator as prg
 
 
 ############## HOOBI tutorial section ##############
-############## HOOBI tutorial section ##############
 # types = ["delay", "breakdown"]
 # x = np.random.randint(0, 2)
 # types[x]
