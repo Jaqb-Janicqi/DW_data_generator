@@ -10,7 +10,6 @@ import passanger_ride_generator as prg
 # x = np.random.randint(0, 2)
 # types[x]
 # delay = np.random.choice([0, 1], p=[0.9, 0.1])
-
 ############## HOOBI tutorial section ##############     
 
 
@@ -22,3 +21,6 @@ print(passenger_gen.id)
 # pandas to csv
 # df = pd.DataFrame(passenger_gen.passanger_rides)
 # df.to_csv("passanger_rides.csv", index=False, header=False)
+####################################PROTOTYPING#################################################
+
+####################################DATA_GENERATION#################################################
