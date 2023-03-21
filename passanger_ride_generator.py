@@ -29,7 +29,7 @@ def friday_distribution():
     # plt.hist(data, bins=1440, alpha=0.5, label='gamma')
     # plt.show()
     return data
-
+#####
 
 def weekend_distribution():
     all_day = np.random.uniform(0, 24, 2000)
@@ -120,4 +120,6 @@ class PassangerGenerator:
             passenger_ride = PassangerRide(
                 entry_section_id, exit_section_id, self.id, entry_time, exit_time)
             self.passanger_rides.append(passenger_ride)
-            self.id += 1
+            self.id += 1 
+
+            ##########
