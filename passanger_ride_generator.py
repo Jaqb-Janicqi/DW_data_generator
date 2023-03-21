@@ -9,6 +9,8 @@ def working_day_distribution():
     mid_day = np.random.normal(12, 4, 2000)
     evening_peak = np.random.normal(16.5, 1.7, 7000)
     data = np.concatenate((morning_peak, all_day, evening_peak, mid_day))
+    data = data[data < 24]
+    data = data[data >= 0]
     return data
 
 def friday_distribution():
@@ -20,7 +22,7 @@ def friday_distribution():
     night_peak2 = np.random.normal(0.5, 1.1, 700)
     data = np.concatenate((morning_peak, all_day, evening_peak, mid_day, night_peak1, night_peak2))
     data = data[data < 24]
-    data = data[data > 0]
+    data = data[data >= 0]
     # plt.hist(data, bins=1440, alpha=0.5, label='gamma')
     # plt.show()
     return data
@@ -30,7 +32,7 @@ def weekend_distribution():
     mid_day = np.random.normal(12, 4, 3000)
     data = np.concatenate((all_day, mid_day))
     data = data[data < 24]
-    data = data[data > 0]
+    data = data[data >= 0]
     # plt.hist(data, bins=1440, alpha=0.5, label='gamma')
     # plt.show()
     return data
