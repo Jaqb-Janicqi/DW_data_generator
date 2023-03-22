@@ -122,4 +122,8 @@ class PassangerGenerator:
             self.passanger_rides.append(passenger_ride)
             self.id += 1 
 
-            ##########
+    def to_csv(self):
+        with open('passanger_rides.csv', 'w') as file:
+            file.write('entry_section_id,exit_section_id,id,entry_time,exit_time\n')
+            for passanger_ride in self.passanger_rides:
+                file.write(str(passanger_ride) + '\n')
