@@ -14,15 +14,6 @@ import passanger_ride_generator as prg
 
 
 #################################### PROTOTYPING#################################################
-passenger_gen = prg(2018)
-passenger_gen.prg()
-print(passenger_gen.id)
-# pandas to csv
-# df = pd.DataFrame(passenger_gen.passanger_rides)
-# df.to_csv("passanger_rides.csv", index=False, header=False)
-#################################### PROTOTYPING#################################################
-
-# passenger_gen.to_csv()
 timetables = pd.read_excel("timetables.xlsx")
 timetable0 = timetables[2:91] # datetime.time
 timetable1 = timetables[96:185]
