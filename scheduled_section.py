@@ -35,7 +35,10 @@ class ScheduledSectionGenerator():
                     if i%2 == 0:
                         self.scheduled_sections.append(ScheduledSection(id, k, k+1, self.timetable[i][j][k]))
                     else:
-                        self.scheduled_sections.append(ScheduledSection(id, k+1, k, self.timetable[i][j][k]))
+                        entry = len(self.timetable[i][j]) - k
+                        exit = len(self.timetable[i][j]) - k - 1
+                        self.scheduled_sections.append(ScheduledSection(id, entry, exit, self.timetable[i][j][k]))
+                        print (self.scheduled_sections[-1])
                     id += 1
 
     def to_csv(self):
