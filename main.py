@@ -12,16 +12,18 @@ import passanger_ride_generator as prg
 # delay = np.random.choice([0, 1], p=[0.9, 0.1])
 ############## HOOBI tutorial section ##############
 
+# timetable0 = pd.read_excel("timetable0.xlsx") # datetime.time
+# timetable1 = pd.read_excel("timetable1.xlsx") # datetime.time
+# timetable0 = timetable0.values.tolist()
+# timetable1 = timetable1.values.tolist()
+# timetables = [timetable0, timetable1]
+# passenger_gen = prg.PassangerGenerator(2018, timetables)
 
-#################################### PROTOTYPING#################################################
-timetables = pd.read_excel("timetables.xlsx")
-timetable0 = timetables[2:91] # datetime.time
-timetable1 = timetables[96:185]
-print(timetable0.shape)
-timetables = [timetable0, timetable1]
-passenger_gen = prg.PassangerGenerator(2018, timetables)
+
+#################################### PROTOTYPING #################################################
+passenger_gen = prg.PassangerGenerator(2018)
 passenger_gen.generate_passanger_rides()
-# print(timetables[0])
+
 #################################### PROTOTYPING #################################################
 
 #################################### DATA_GENERATION #################################################
