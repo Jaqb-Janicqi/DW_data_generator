@@ -60,7 +60,7 @@ class PassangerGenerator:
     sections = [1, 3, 2, 1, 3, 1, 2, 2, 1, 3, 1,
                 2, 3, 1, 3, 1]  # station0->1, station1->2
 
-    def __init__(self, year):
+    def __init__(self, year, timetables):
         self.id = 0
         self.num_sections = 16
         self.passanger_rides = []
@@ -71,6 +71,7 @@ class PassangerGenerator:
         # reshape calendar tuples to a list of dates
         self.dates = [
             date for month in self.calendar_tuples for week in month for day in week for date in day]
+        self.timetables = timetables
 
     def generate_passanger_rides(self):
         for date in self.dates:
@@ -96,6 +97,8 @@ class PassangerGenerator:
 
     # załadować excela, zobaczyć najbliższy pociąg i dopiero liczyć czas przejazdu
     def generate_ride(self, date, num_passangers, hour, minute):
+        time = calendar.datetime.time(hour, minute)
+        closest_train = self.find_closest_train(time)
         for i in range(num_passangers):
             exit_section_id = entry_section_id = np.random.randint(
                 1, self.num_sections + 1)
@@ -122,4 +125,12 @@ class PassangerGenerator:
             self.passanger_rides.append(passenger_ride)
             self.id += 1 
 
-            ##########
+    def find_closest_train(self, time, entry_section_id, exit_section_id):
+        pass
+        
+
+    def to_csv(self):
+        with open('passanger_rides.csv', 'w') as file:
+            file.write('entry_section_id,exit_section_id,id,entry_time,exit_time\n')
+            for passanger_ride in self.passanger_rides:
+                file.write(str(passanger_ride) + '\n')
