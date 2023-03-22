@@ -14,9 +14,9 @@ import passanger_ride_generator as prg
 
 
 #################################### PROTOTYPING#################################################
-passenger_gen = prg(2018)
-passenger_gen.prg()
-print(passenger_gen.id)
+# passenger_gen = prg(2018)
+# passenger_gen.prg()
+# print(passenger_gen.id)
 # pandas to csv
 # df = pd.DataFrame(passenger_gen.passanger_rides)
 # df.to_csv("passanger_rides.csv", index=False, header=False)
