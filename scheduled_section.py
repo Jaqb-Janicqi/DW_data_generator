@@ -2,6 +2,7 @@ import pandas as pd
 import calendar
 import datetime
 
+
 class ScheduledSection():
     def __init__(self, section_id, start_station_id, end_station_id, arrival_time):
         self.id = section_id
@@ -11,7 +12,8 @@ class ScheduledSection():
 
     def __str__(self):
         return f"{self.id},{self.start_station_id},{self.end_station_id},{self.arrival_time}"
-    
+
+
 class ScheduledSectionGenerator():
     def __init__(self, year, timetable):
         self.timetable = timetable
@@ -32,13 +34,15 @@ class ScheduledSectionGenerator():
                     # if self.timetable[i][j][k] is not of type datetime.time, convert it to datetime.time
                     if not isinstance(self.timetable[i][j][k], datetime.time):
                         self.timetable[i][j][k] = self.timetable[i][j][k].time()
-                    if i%2 == 0:
-                        self.scheduled_sections.append(ScheduledSection(id, k, k+1, self.timetable[i][j][k]))
+                    if i % 2 == 0:
+                        self.scheduled_sections.append(
+                            ScheduledSection(id, k, k+1, self.timetable[i][j][k]))
                     else:
                         entry = len(self.timetable[i][j]) - k
                         exit = len(self.timetable[i][j]) - k - 1
-                        self.scheduled_sections.append(ScheduledSection(id, entry, exit, self.timetable[i][j][k]))
-                        print (self.scheduled_sections[-1])
+                        self.scheduled_sections.append(ScheduledSection(
+                            id, entry, exit, self.timetable[i][j][k]))
+                        print(self.scheduled_sections[-1])
                     id += 1
 
     def to_csv(self):
@@ -46,13 +50,3 @@ class ScheduledSectionGenerator():
             file.write('id,start_station_id,end_station_id,arrival_time\n')
             for section in self.scheduled_sections:
                 file.write(str(section) + '\n')
-
-timetable0 = pd.read_excel("timetable0.xlsx") # datetime.time
-timetable1 = pd.read_excel("timetable1.xlsx") # datetime.time
-timetable0 = timetable0.values.tolist()
-timetable1 = timetable1.values.tolist()
-timetables = [timetable0, timetable1]
-
-scheduled_section_generator = ScheduledSectionGenerator(2018, timetables)
-scheduled_section_generator.generate_scheduled_sections()
-scheduled_section_generator.to_csv()

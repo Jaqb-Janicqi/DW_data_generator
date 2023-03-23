@@ -31,6 +31,7 @@ def friday_distribution():
     return data
 #####
 
+
 def weekend_distribution():
     all_day = np.random.uniform(0, 24, 2000)
     mid_day = np.random.normal(12, 4, 3000)
@@ -98,22 +99,25 @@ class PassangerGenerator:
     # załadować excela, zobaczyć najbliższy pociąg i dopiero liczyć czas przejazdu
     def generate_ride(self, date, num_passangers, hour, minute):
         time = calendar.datetime.time(hour, minute)
-        # closest_train = self.find_closest_train(time)
         for i in range(num_passangers):
             exit_section_id = entry_section_id = np.random.randint(
                 1, self.num_sections + 1)
             while exit_section_id == entry_section_id:
                 exit_section_id = np.random.randint(0, self.num_sections)
+            closest_train = self.find_closest_train(
+                time, entry_section_id, exit_section_id)
+
             if entry_section_id < exit_section_id:
                 travel_time = sum(
                     self.sections[entry_section_id:exit_section_id])
             else:
                 travel_time = sum(
                     self.sections[exit_section_id:entry_section_id])
+
             entry_time = calendar.datetime.datetime(
                 date.year, date.month, date.day, hour, minute, np.random.randint(0, 60))
-            exit_time = entry_time + \
-                calendar.datetime.timedelta(minutes=travel_time)
+            # exit_time = sum of entry_time and travel_time and closest_train
+            exit_time = entry_time + calendar.datetime.timedelta(minutes=travel_time) + calendar.datetime.timedelta(hours=closest_train.hours, minutes=closest_train.minutes)
             exit_sec = entry_time.second
             while exit_sec == entry_time.second:
                 exit_sec = np.random.randint(0, 60)
@@ -123,14 +127,26 @@ class PassangerGenerator:
             passenger_ride = PassangerRide(
                 entry_section_id, exit_section_id, self.id, entry_time, exit_time)
             self.passanger_rides.append(passenger_ride)
-            self.id += 1 
+            self.id += 1
 
     def find_closest_train(self, time, entry_section_id, exit_section_id):
-        pass
-        
+        closest_train = None
+        if entry_section_id < exit_section_id:
+            timetable_id = 0
+        else:
+            timetable_id = 1
+        for arrival_time in range(len(self.timetables[0])):
+            if self.timetables[timetable_id][arrival_time][entry_section_id] > time:
+                if closest_train is None:
+                    closest_train = self.timetables[timetable_id][arrival_time][entry_section_id]
+                elif closest_train > self.timetables[timetable_id][arrival_time][entry_section_id]:
+                    closest_train = self.timetables[timetable_id][arrival_time][entry_section_id]
+                    
+        return closest_train
 
     def to_csv(self):
         with open('passanger_rides.csv', 'w') as file:
-            file.write('entry_section_id,exit_section_id,id,entry_time,exit_time\n')
+            file.write(
+                'entry_section_id,exit_section_id,id,entry_time,exit_time\n')
             for passanger_ride in self.passanger_rides:
                 file.write(str(passanger_ride) + '\n')
