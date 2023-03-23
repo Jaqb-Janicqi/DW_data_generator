@@ -36,16 +36,16 @@ event_gen = eg.EventGenerator()
 event_gen.generate_events(100)
 event_gen.to_csv()
 
-scheduled_section_generator = ss.ScheduledSectionGenerator(2019, timetables)
+scheduled_section_generator = ss.ScheduledSectionGenerator(2018, timetables)
 scheduled_section_generator.generate_scheduled_sections()
 scheduled_section_generator.to_csv()
 
 real_section_generator = rsg.RealSectionGenerator(
-    scheduled_section_generator.scheduled_sections, event_gen.events, train_gen.trains, 2019, 17, 100)
+    scheduled_section_generator.scheduled_sections, event_gen.events, train_gen.trains, 2018, 17, 100)
 real_section_generator.generate_real_sections()
 real_section_generator.to_csv()
 
-passenger_gen = prg.PassangerGenerator(2019, timetables)
+passenger_gen = prg.PassangerGenerator(2018, timetables)
 passenger_gen.generate_passanger_rides()
 passenger_gen.to_csv()
 

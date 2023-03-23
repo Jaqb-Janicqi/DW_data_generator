@@ -11,7 +11,10 @@ class RealSection:
         self.event_id = event_id
 
     def __str__(self):
-        return f"{self.id},{self.scheduled_section_id},{self.real_arrival_time},{self.train_id},{self.event_id}"
+        if self.event_id is None:
+            return f"{self.id},{self.scheduled_section_id},{self.real_arrival_time},{self.train_id},"
+        else:
+            return f"{self.id},{self.scheduled_section_id},{self.real_arrival_time},{self.train_id},{self.event_id}"
 
 
 class RealSectionGenerator:
