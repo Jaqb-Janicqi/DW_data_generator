@@ -27,6 +27,10 @@ class RealSectionGenerator:
         # reshape calendar tuples to a list of dates
         self.dates = [
             date for month in self.calendar_tuples for week in month for day in week for date in day]
+        # filter dates to contain only given year
+        self.dates = list(filter(lambda date: date.year == year, self.dates))
+        # remove duplicates from dates
+        self.dates = list(dict.fromkeys(self.dates))
         self.amount_of_stations = amount_of_stations
         self.amount_of_trains = amount_of_trains
 
