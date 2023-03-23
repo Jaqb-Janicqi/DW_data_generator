@@ -40,5 +40,5 @@ class EventGenerator:
         with open("events.csv", "w") as file:
             file.write('id,event_type,delay_amount\n')
             for event in self.events:
-                print(str(event))
+                # print(str(event))
                 file.write(str(event) + '\n')
