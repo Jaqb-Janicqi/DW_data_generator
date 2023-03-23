@@ -4,6 +4,7 @@ import train_generator as tg
 import event_generator as eg
 import scheduled_section as ss
 import real_section_generator as rsg
+import time
 
 
 ############## HOOBI tutorial section ##############
@@ -20,6 +21,7 @@ import real_section_generator as rsg
 
 
 #################################### DATA_GENERATION #################################################
+tic = time.perf_counter()
 timetable0 = pd.read_excel("timetable0.xlsx")  # datetime.time
 timetable1 = pd.read_excel("timetable1.xlsx")  # datetime.time
 timetable0 = timetable0.values.tolist()
@@ -34,15 +36,18 @@ event_gen = eg.EventGenerator()
 event_gen.generate_events(100)
 event_gen.to_csv()
 
-scheduled_section_generator = ss.ScheduledSectionGenerator(2018, timetables)
+scheduled_section_generator = ss.ScheduledSectionGenerator(2019, timetables)
 scheduled_section_generator.generate_scheduled_sections()
 scheduled_section_generator.to_csv()
 
 real_section_generator = rsg.RealSectionGenerator(
-    scheduled_section_generator.scheduled_sections, event_gen.events, train_gen.trains, 2018, 17, 100)
+    scheduled_section_generator.scheduled_sections, event_gen.events, train_gen.trains, 2019, 17, 100)
 real_section_generator.generate_real_sections()
 real_section_generator.to_csv()
 
-passenger_gen = prg.PassangerGenerator(2018, timetables)
+passenger_gen = prg.PassangerGenerator(2019, timetables)
 passenger_gen.generate_passanger_rides()
 passenger_gen.to_csv()
+
+toc = time.perf_counter()
+print(f"Generated data in {toc - tic:0.4f} seconds")
