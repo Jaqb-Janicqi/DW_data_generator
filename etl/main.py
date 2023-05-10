@@ -5,6 +5,7 @@ import event_generator as eg
 import scheduled_section as ss
 import real_section_generator as rsg
 import time
+from dates_times import DateGenerator, TimeGenerator
 
 
 ############## HOOBI tutorial section ##############
@@ -30,32 +31,41 @@ timetables = [timetable0, timetable1]
 
 train_gen = tg.TrainGenerator()
 train_gen.generate_trains(100)
-train_gen.to_csv()
+# train_gen.to_csv()
 
-event_gen = eg.EventGenerator()
-event_gen.generate_events(100)
-event_gen.to_csv()
+# event_gen = eg.EventGenerator()
+# event_gen.generate_events(100)
+# # event_gen.to_csv()
+
+time_generator = TimeGenerator()
+time_generator.generate_times()
+# time_generator.to_csv()
+
+date_generator = DateGenerator()
+date_generator.generate_dates(2018, 2019)
+# date_generator.to_csv()
 
 scheduled_section_generator = ss.ScheduledSectionGenerator(2019, timetables)
 scheduled_section_generator.generate_scheduled_sections()
-scheduled_section_generator.to_csv()
-
-real_section_generator = rsg.RealSectionGenerator(
-    scheduled_section_generator.scheduled_sections, event_gen.events, train_gen.trains, 2019, 17, 100)
-real_section_generator.generate_real_sections()
-real_section_generator.to_csv()
+# scheduled_section_generator.to_csv()
 
 passenger_gen = prg.PassangerGenerator(2019, timetables)
-passenger_gen.generate_passanger_rides()
-passenger_gen.to_csv()
+# passenger_gen.generate_passanger_rides()
+# passenger_gen.to_csv()
+
+real_section_generator = rsg.RealSectionGenerator(
+    scheduled_section_generator.scheduled_sections, train_gen.trains, 2018, 17, 100, date_generator.dates, time_generator.times, passenger_gen)
+real_section_generator.generate_real_sections()
+# real_section_generator.to_csv()
+
 
 toc = time.perf_counter()
 print(f"Generated data in {toc - tic:0.4f} seconds")
 
 
-stations = []
-for i in range(0, 17):
-    stations.append(i)
-with open('stations.csv', 'w') as file:
-    for station in stations:
-        file.write(str(stations[station]) + '\n')
+# stations = []
+# for i in range(0, 17):
+#     stations.append(i)
+# with open('stations.csv', 'w') as file:
+#     for station in stations:
+#         file.write(str(stations[station]) + '\n')

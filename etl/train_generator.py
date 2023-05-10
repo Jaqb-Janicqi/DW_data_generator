@@ -23,8 +23,10 @@ class TrainGenerator:
         for i in range(num_trains):
             self.id = i
             # generate random standing and seating capacity
-            standing_capacity = random.randint(1100, 1300)
-            seating_capacity = random.randint(220, 260)
+            # standing_capacity = random.randint(1100, 1300)
+            # seating_capacity = random.randint(220, 260)
+            standing_capacity = 1000
+            seating_capacity = 200
 
             # create a new train with generated capacity
             train = Trains(self.id, standing_capacity, seating_capacity)
