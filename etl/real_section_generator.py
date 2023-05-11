@@ -47,65 +47,77 @@ class RealSectionGenerator:
         self.passenger_gen = passenger_gen
 
     def generate_real_sections(self):
+        files_generated = 0
         train_id = 0
         stations_covered = 0
         date_num = 0
         last_arrival_time = None
-        with open('real_sections.csv', 'w', newline='', encoding= "utf-8") as file:
-            writer = csv.writer(file, delimiter=',')
-            for date in self.dates:
-                for scheduled_section in self.scheduled_sections:
-                    last_arrival_time = scheduled_section.arrival_time
-                    if last_arrival_time > scheduled_section.arrival_time:
-                        date_num += 1
-                    event_id = 0
-                    if random.randint(1, 1000) == 1:
-                        event_id = random.randrange(-1, 52)
+        # extract days from dates
+        # months = []
+        # january = [date for date in self.dates if date.month == 1]
+        # february = [date for date in self.dates if date.month == 2]
+        # months = [january, february]
+        # get first two dates 
+        days = [date for date in self.dates if date.month == 1][:2]
+        for date in days:
+            for scheduled_section in self.scheduled_sections:
 
-                    year = date.year
-                    month = date.month
-                    day = date.day
-                    # get date_id from dates that has the same year, month and day as the scheduled_section
-                    date_id = next((date.Id for date in self.dates_objects if date.year == year and date.month == month and date.day == day), None)
+                # if scheduled_section.arrival_time.hour == 12 and last_arrival_time.hour == 11:
+                #     self.to_csv(f"real_sections_{date_num}.csv")
+                #     files_generated += 1
+                #     self.real_sections = []
 
-                    # get time_id from times that has the same hour and minute as the scheduled_section
-                    time_id = next((time.Id for time in self.times if time.hour == scheduled_section.arrival_time.hour and time.minute == scheduled_section.arrival_time.minute), None)
+                last_arrival_time = scheduled_section.arrival_time
+                if last_arrival_time > scheduled_section.arrival_time:
+                    date_num += 1
 
-                    StartStationId = scheduled_section.start_station_id
-                    EndStationId = scheduled_section.end_station_id
+                event_id = 0
+                if random.randint(1, 10000) == 1:
+                    event_id = random.randrange(-1, 52)
 
-                    # get amount of passengers
-                    amount_of_passangers = self.passenger_gen.get_number_of_passangers(
-                        self.dates_objects[date_num], self.times[time_id])
+                year = date.year
+                month = date.month
+                day = date.day
+                # get date_id from dates that has the same year, month and day as the scheduled_section
+                date_id = next((date.Id for date in self.dates_objects if date.year == year and date.month == month and date.day == day), None)
 
-                    if random.randint(1, 10) == 1:
-                        DelayAmount = random.randrange(1, 3)
-                    else:
-                        DelayAmount = 0
+                # get time_id from times that has the same hour and minute as the scheduled_section
+                time_id = next((time.Id for time in self.times if time.hour == scheduled_section.arrival_time.hour and time.minute == scheduled_section.arrival_time.minute), None)
 
-                    date_FREEVARIABLENAME = self.dates_objects[date_num]
-                    time_FREEVARIABLENAME = scheduled_section.arrival_time
-                    ArrivalTime = datetime(date_FREEVARIABLENAME.year, date_FREEVARIABLENAME.month, date_FREEVARIABLENAME.day, time_FREEVARIABLENAME.hour, time_FREEVARIABLENAME.minute)
-                    RealArrivalTime = ArrivalTime + timedelta(minutes=DelayAmount)
-                    
-                    real_section = RealSection(self.id, train_id, time_id, date_id, event_id, StartStationId, EndStationId,
-                                                amount_of_passangers, DelayAmount, ArrivalTime, RealArrivalTime)
+                StartStationId = scheduled_section.start_station_id
+                EndStationId = scheduled_section.end_station_id
 
-                    writer.writerow([real_section.RealSectionId, real_section.TrainId, real_section.TimeId, real_section.DateId, real_section.EventId, real_section.StartStationId, real_section.EndStationId, real_section.AmountOfPassengers, real_section.DelayAmount, real_section.ArrivalTime, real_section.RealArrivalTime])
-                    self.id += 1
-                    stations_covered += 1
-                    if stations_covered == self.amount_of_stations - 1:
-                        train_id += 1
-                        stations_covered = 0
-                        if train_id == self.amount_of_trains:
-                            train_id = 0
+                # get amount of passengers
+                amount_of_passangers = self.passenger_gen.get_number_of_passangers(
+                    self.dates_objects[date_num], self.times[time_id])
 
-                    return
-                # print(real_section)
+                if random.randint(1, 10) == 1:
+                    DelayAmount = random.randrange(1, 3)
+                else:
+                    DelayAmount = 0
 
-    def to_csv(self):
-        with open('real_sections.csv', 'w', newline='', encoding= "utf-8") as file:
-            writer = csv.writer(file, delimiter=',')
+                date_FREEVARIABLENAME = self.dates_objects[date_num]
+                time_FREEVARIABLENAME = scheduled_section.arrival_time
+                ArrivalTime = datetime(date_FREEVARIABLENAME.year, date_FREEVARIABLENAME.month, date_FREEVARIABLENAME.day, time_FREEVARIABLENAME.hour, time_FREEVARIABLENAME.minute)
+                RealArrivalTime = ArrivalTime + timedelta(minutes=DelayAmount)
+                
+                real_section = RealSection(self.id, train_id, time_id, date_id, event_id, StartStationId, EndStationId,
+                                            amount_of_passangers, DelayAmount, ArrivalTime, RealArrivalTime)
+                self.real_sections.append(real_section)
+                self.id += 1
+                stations_covered += 1
+                if stations_covered == self.amount_of_stations - 1:
+                    train_id += 1
+                    stations_covered = 0
+                    if train_id == self.amount_of_trains:
+                        train_id = 0
+            
+            self.to_csv(f"real_sections_{files_generated}.csv")
+            files_generated += 1
+            # print(real_section)
+        # self.to_csv(f"real_sections_{date_num}.csv")
+
+    def to_csv(self, filename):
+        with open(filename, 'w', newline='', encoding= "utf-8") as file:
             for real_section in self.real_sections:
-                writer.writerow([real_section.RealSectionId, real_section.TrainId, real_section.TimeId, real_section.DateId, real_section.EventId, real_section.StartStationId, real_section.EndStationId, real_section.AmountOfPassengers, real_section.DelayAmount, real_section.ArrivalTime, real_section.RealArrivalTime])
-
+                file.write(f"{real_section}\n")
