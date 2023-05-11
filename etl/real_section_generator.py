@@ -19,7 +19,7 @@ class RealSection:
         self.RealArrivalTime = RealArrivalTime
 
     def __str__(self):
-        return f"{self.RealSectionId},{self.TrainId},{self.TimeId},{self.DateId},{self.StartStationId},{self.EndStationId},{self.AmountOfPassengers},{self.DelayAmount},{self.ArrivalTime},{self.RealArrivalTime}"
+        return f"{self.RealSectionId},{self.TrainId},{self.TimeId},{self.DateId},{self.EventId},{self.StartStationId},{self.EndStationId},{self.AmountOfPassengers},{self.DelayAmount},{self.ArrivalTime},{self.RealArrivalTime}"
 
 
 
@@ -52,6 +52,7 @@ class RealSectionGenerator:
         stations_covered = 0
         date_num = 0
         last_arrival_time = None
+        sections_generated = 0
         # extract days from dates
         # months = []
         # january = [date for date in self.dates if date.month == 1]
@@ -106,6 +107,14 @@ class RealSectionGenerator:
                 self.real_sections.append(real_section)
                 self.id += 1
                 stations_covered += 1
+                sections_generated += 1
+                if sections_generated == 1000:
+                    self.to_csv(f"real_sections_{files_generated}.csv")
+                    self.real_sections = []
+                    files_generated += 1
+                if sections_generated == 1100:
+                    self.to_csv(f"real_sections_{files_generated}.csv")
+                    return
                 if stations_covered == self.amount_of_stations - 1:
                     train_id += 1
                     stations_covered = 0

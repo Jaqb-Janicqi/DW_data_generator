@@ -123,6 +123,7 @@ class PassangerGenerator:
             self.passanger_amounts.append(num_passangers)
 
         time_id = int(time.hour*60 + time.minute)
+        print(self.passanger_amounts[time_id])
         return self.passanger_amounts[time_id]
 
     # załadować excela, zobaczyć najbliższy pociąg i dopiero liczyć czas przejazdu
