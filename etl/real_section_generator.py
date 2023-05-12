@@ -108,11 +108,11 @@ class RealSectionGenerator:
                 self.id += 1
                 stations_covered += 1
                 sections_generated += 1
-                if sections_generated == 1000:
+                if sections_generated == 10:
                     self.to_csv(f"real_sections_{files_generated}.csv")
                     self.real_sections = []
                     files_generated += 1
-                if sections_generated == 1100:
+                if sections_generated == 20:
                     self.to_csv(f"real_sections_{files_generated}.csv")
                     return
                 if stations_covered == self.amount_of_stations - 1:
@@ -127,6 +127,10 @@ class RealSectionGenerator:
         # self.to_csv(f"real_sections_{date_num}.csv")
 
     def to_csv(self, filename):
+        num = 0
         with open(filename, 'w', newline='', encoding= "utf-8") as file:
             for real_section in self.real_sections:
-                file.write(f"{real_section}\n")
+                if num != 0:
+                    file.write('\n')
+                num += 1
+                file.write(real_section)
