@@ -1,6 +1,7 @@
 import numpy as np
 import datetime
 from real_section import RealSection
+import passanger_ride as pr
 
 
 class Train:
@@ -32,12 +33,13 @@ class Train:
         self.scheduled_sections = sections
 
     def board_passangers(self, metro_line):
+        x = metro_line[self.current_station]
         for passanger in metro_line[self.current_station]:
             if passanger.direction == self.direction:
                 passanger.board_train(self.Trainid, self.ride_id, self.current_time)
                 self.passangers.append(passanger)
                 metro_line[self.current_station].remove(passanger)
-
+        y = 0
 
     def unboard_passangers(self, passanger_rides):
         for passanger in self.passangers:
@@ -45,7 +47,6 @@ class Train:
                 passanger.exit_train(self.current_time)
                 passanger_rides.append(passanger)
                 self.passangers.remove(passanger)
-        
 
     def next_station(self, metro_line, real_section_id, passanger_rides):
         self.unboard_passangers(passanger_rides)

@@ -24,3 +24,25 @@ class PassangerRide:
         with open(f'{file_name}', 'w', encoding='UTF-8') as file:
             for passanger_ride in passanger_rides:
                 file.write(str(passanger_ride) + '\n')
+
+
+class Pszczyno:
+    def __init__(self) -> None:
+        zwierzeta = []
+        zwierzeta.append("Pszczoły")
+
+class Brzeg:
+    def __init__(self) -> None:
+        zwierzeta = []
+        zwierzeta.append("Trzmiele")
+
+class Kielce:
+    def przyjaciele(self):
+        Brzeg = Brzeg()
+        Pszczyno = Pszczyno()
+        przyjaciele = ["Chrząszcze", "Leszcze", "Wieprze", "Kleszcze"]
+        for przyjaciel in przyjaciele:
+            Brzeg.zwierzeta.append(przyjaciel)
+        for przyjaciel in przyjaciele:
+            Brzeg.zwierzeta.remove(przyjaciel)
+            Pszczyno.zwierzeta.append(przyjaciel)

@@ -7,13 +7,14 @@ import distributions as dist
 import time
 import datetime
 import numpy as np
+import ride
 
 
 tic = time.perf_counter()
 snapshots_made = 0
 
 
-def snapshot(trains, scheduled_sections, ride_id, real_sections, passanger_rides):
+def snapshot(trains, scheduled_sections, rides, real_sections, passanger_rides):
     with open(f'data/trains{snapshots_made}.csv', 'w', encoding='UTF-8') as file1:
         for train in trains:
             file1.write(str(train) + '\n')
@@ -27,7 +28,7 @@ def snapshot(trains, scheduled_sections, ride_id, real_sections, passanger_rides
         for passanger_ride in passanger_rides:
             file4.write(str(passanger_ride) + '\n')
     with open(f'data/rides{snapshots_made}.csv', 'w', encoding='UTF-8') as file5:
-        for ride in range(ride_id + 1):
+        for ride in rides:
             file5.write(str(ride) + '\n')
 
 
@@ -56,21 +57,21 @@ real_sections = []
 metro_line = [[] for _ in range(len(section_times))]
 real_section_id = 0
 ride_id = 0
+rides = []
 passanger_id = 0
 minute = 0
 while current_time < simulation_end_time:
-    for station in metro_line:  # generate passangers for each station
+    for start_station_id in range(len(metro_line)):  # generate passangers for each station
         passanger_amount = distributions.passanger_amount(
             minute, current_time.weekday() + 1)
         for _ in range(passanger_amount):
-            start_station_id = None
-            end_station_id = None
+            end_station_id = start_station_id
             while start_station_id == end_station_id:
                 start_station_id = np.random.randint(0, len(section_times))
                 end_station_id = np.random.randint(0, len(section_times))
             passanger = pr.PassangerRide(
                 passanger_id, start_station_id, end_station_id, current_time)
-            station.append(passanger)
+            metro_line[start_station_id].append(passanger)
             passanger_id += 1
     # if current_time.time() is in timetable, start a new ride
     for timetable_id in range(len(timetables)):
@@ -78,7 +79,7 @@ while current_time < simulation_end_time:
             if current_time.time() == scheduled_ride[0]:
                 # make snapshot in such way that scd changes between time periods
                 if len(train_generator.free_trains) <= 0 and snapshots_made == 0:
-                    snapshot(train_generator.trains, scheduled_sections, ride_id, real_sections, passanger_rides)
+                    snapshot(train_generator.trains, scheduled_sections, rides, real_sections, passanger_rides)
                     train_generator.update_trains()
                     snapshots_made += 1
                 train = train_generator.get_free_train()
@@ -96,6 +97,9 @@ while current_time < simulation_end_time:
                         scheduled_section_id, section_start_station, section_end_station, arrival_time))
                     scheduled_section_id += 1
                     scheduled_sections.append(sections[-1])
+                    section_start_station = section_end_station
+                train_ride = ride.Ride(ride_id, train.Trainid)
+                rides.append(train_ride)
                 train.start_ride(start_station, ride_id,
                                  direction_of_ride, current_time, sections)
                 ride_id += 1
@@ -110,10 +114,13 @@ while current_time < simulation_end_time:
     minute += 1
     current_time += datetime.timedelta(minutes=1)
 
+for station in metro_line:
+    print(len(station))
+
 snapshot(train_generator.trains, scheduled_sections,
-         ride_id, real_sections, passanger_rides)
+         rides, real_sections, passanger_rides)
 print(f"Rides made: {ride_id}")  # debug
 
-
+print(len(passanger_rides))
 toc = time.perf_counter()
 print(f"Generated data in {toc - tic:0.4f} seconds")
