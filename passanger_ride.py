@@ -18,9 +18,7 @@ class PassangerRide:
         self.ride_id = ride_id
 
     def __str__(self):
-        if self.exit_time is not None:
-            return f"{self.passanger_ride_id},{self.entry_station_id},{self.exit_station_id},{self.entry_time},{self.exit_time},{self.train_id}"
-        return f"{self.passanger_ride_id},{self.entry_station_id},{self.exit_station_id},{self.entry_time},,{self.train_id}"
+        return f"{self.passanger_ride_id},{self.entry_station_id},{self.exit_station_id},{self.entry_time},{self.exit_time},{self.train_id},{self.ride_id}"
 
     def to_csv(self, file_name, passanger_rides):
         with open(f'{file_name}', 'w', encoding='UTF-8') as file:

@@ -26,7 +26,10 @@ class Train:
         self.end_station = len(self.section_times) - \
             1 if self.direction == 1 else 0
         self.ride_id = ride_id
-        self.scheduled_sections = scheduled_sections
+        sections = []
+        for section_id in range(len(scheduled_sections)):
+            sections.append(section_id)
+        self.scheduled_sections = sections
 
     def board_passangers(self, metro_line):
         for passanger in metro_line[self.current_station]:
