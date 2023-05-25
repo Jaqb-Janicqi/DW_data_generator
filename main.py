@@ -16,8 +16,13 @@ snapshots_made = 0
 
 def snapshot(trains, scheduled_sections, rides, real_sections, passanger_rides):
     with open(f'data/trains{snapshots_made}.csv', 'w', encoding='UTF-8') as file1:
+        ids = []
+        for train in trains:
+            ids.append(train.Trainid)
+        ids.sort()
         for train in trains:
             file1.write(str(train) + '\n')
+        
     with open(f'data/scheduled_sections{snapshots_made}.csv', 'w', encoding='UTF-8') as file2:
         for scheduled_section in scheduled_sections:
             file2.write(str(scheduled_section) + '\n')
@@ -79,7 +84,8 @@ while current_time < simulation_end_time:
             if current_time.time() == scheduled_ride[0]:
                 # make snapshot in such way that scd changes between time periods
                 if len(train_generator.free_trains) <= 0 and snapshots_made == 0:
-                    snapshot(train_generator.trains, scheduled_sections, rides, real_sections, passanger_rides)
+                    trains = train_generator.trains + train_generator.free_trains
+                    snapshot(trains, scheduled_sections, rides, real_sections, passanger_rides)
                     train_generator.update_trains()
                     snapshots_made += 1
                 train = train_generator.get_free_train()
