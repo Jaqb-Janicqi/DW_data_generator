@@ -20,8 +20,15 @@ def snapshot(trains, scheduled_sections, rides, real_sections, passanger_rides):
         for train in trains:
             ids.append(train.Trainid)
         ids.sort()
+        if snapshots_made != 0:
+            print(len(trains))
+            # append to trains last 4 items from trains
+            for i in range(4):
+                trains.append(trains[i])
+            print(len(trains))
         for train in trains:
             file1.write(str(train) + '\n')
+    # file1.close()
         
     with open(f'data/scheduled_sections{snapshots_made}.csv', 'w', encoding='UTF-8') as file2:
         for scheduled_section in scheduled_sections:
@@ -37,9 +44,9 @@ def snapshot(trains, scheduled_sections, rides, real_sections, passanger_rides):
             file5.write(str(ride) + '\n')
 
 
-simulation_start_time = datetime.datetime(2021, 1, 1, 0, 0, 0)
+simulation_start_time = datetime.datetime(2021, 12, 30, 0, 0, 0)
 current_time = simulation_start_time
-simulation_end_time = datetime.datetime(2021, 1, 5, 0, 0, 0)
+simulation_end_time = datetime.datetime(2022, 1, 5, 0, 0, 0)
 section_times = [1, 3, 2, 1, 3, 1, 2, 2, 1, 3,
                  1, 2, 3, 1, 3, 1]  # station0->1, station1->2
 
@@ -93,21 +100,25 @@ while current_time < simulation_end_time:
                 start_station = 0 if direction_of_ride == 1 else len(
                     section_times) - 1
                 sections = []
+                section_ids = []
                 section_start_station = start_station
                 arrival_time = current_time
+
                 for i in range(len(section_times)):
                     section_end_station = section_start_station + direction_of_ride
                     arrival_time = arrival_time + \
                         datetime.timedelta(minutes=section_times[i])
-                    sections.append(ScheduledSection(
-                        scheduled_section_id, section_start_station, section_end_station, arrival_time))
+                    ss = ScheduledSection(scheduled_section_id, section_start_station, section_end_station, arrival_time)
+                    sections.append(ss)
+                    section_ids.append(scheduled_section_id)
                     scheduled_section_id += 1
                     scheduled_sections.append(sections[-1])
                     section_start_station = section_end_station
+
                 train_ride = ride.Ride(ride_id, train.Trainid)
                 rides.append(train_ride)
                 train.start_ride(start_station, ride_id,
-                                 direction_of_ride, current_time, sections)
+                                 direction_of_ride, current_time, section_ids)
                 ride_id += 1
     # for each train, check if it is on the station, if so, (un)board passangers and move to next station
     for train in train_generator.trains:
